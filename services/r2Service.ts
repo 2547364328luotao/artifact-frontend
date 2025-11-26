@@ -1,10 +1,6 @@
 // R2 对象存储服务
 
-// API 基础路径
-// 如果是开发环境，使用相对路径（走 Vite 代理）
-// 如果是生产环境，使用环境变量配置的完整后端地址
-const API_DOMAIN = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || '');
-const API_BASE = `${API_DOMAIN}/api/r2`;
+const API_BASE = 'http://localhost:3001/api/r2';
 
 export interface R2UploadResult {
   success: boolean;
