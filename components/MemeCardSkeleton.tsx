@@ -17,7 +17,7 @@ const MemeCardSkeleton: React.FC = () => {
       </div>
 
       {/* Image Container Skeleton */}
-      <div className="relative w-full h-64 bg-slate-800 overflow-hidden border-b-2 border-slate-800 shrink-0">
+      <div className="relative w-full h-40 sm:h-56 md:h-64 bg-slate-800 overflow-hidden border-b-2 border-slate-800 shrink-0">
         {/* Shimmer effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-700/50 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
         {/* Placeholder icon */}
@@ -29,10 +29,10 @@ const MemeCardSkeleton: React.FC = () => {
       </div>
 
       {/* Content Body Skeleton */}
-      <div className="p-5 relative flex flex-col flex-1">
+      <div className="p-3 sm:p-5 relative flex flex-col flex-1">
         {/* Title skeleton */}
         <div className="mb-3">
-          <div className="h-5 bg-slate-800 rounded w-3/4"></div>
+          <div className="h-4 sm:h-5 bg-slate-800 rounded w-3/4"></div>
         </div>
 
         {/* Description skeleton */}

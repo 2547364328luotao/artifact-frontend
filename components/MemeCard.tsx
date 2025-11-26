@@ -213,7 +213,7 @@ const MemeCard: React.FC<MemeCardProps> = ({ meme, onLike, currentUserId }) => {
 
       {/* 图片/视频容器 */}
       <div 
-        className="relative w-full h-64 bg-black flex items-center justify-center overflow-hidden border-b shrink-0 cursor-pointer"
+        className="relative w-full h-40 sm:h-56 md:h-64 bg-black flex items-center justify-center overflow-hidden border-b shrink-0 cursor-pointer"
         style={{ borderColor: `${rarityConfig.color}30` }}
         onClick={toggleOverlay}
       >
@@ -307,10 +307,10 @@ const MemeCard: React.FC<MemeCardProps> = ({ meme, onLike, currentUserId }) => {
       </div>
 
       {/* 内容主体 */}
-      <div className="p-5 relative flex flex-col flex-1">
+      <div className="p-3 sm:p-5 relative flex flex-col flex-1">
         {/* 物品名称 */}
         <h3 
-          className="font-sans font-bold text-lg leading-normal tracking-wide truncate pr-2 uppercase mb-3"
+          className="font-sans font-bold text-sm sm:text-lg leading-normal tracking-wide truncate pr-2 uppercase mb-3"
           style={{ 
             color: rarityConfig.color,
             textShadow: `0 0 20px ${rarityConfig.glowColor}`

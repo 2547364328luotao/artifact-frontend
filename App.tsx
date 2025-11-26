@@ -294,8 +294,8 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Gallery Grid - Responsive Gaps and Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {/* Gallery Grid - Responsive Gaps and Columns (mobile uses 2 columns) */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-6 md:gap-8">
           {/* 仅在首次加载且无数据时显示骨架屏 */}
           {isInitialLoading && memes.length === 0 ? (
             <>
