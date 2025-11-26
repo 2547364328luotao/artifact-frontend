@@ -9,6 +9,10 @@ import { Meme, FeedChannel, FEED_CHANNEL_CONFIG } from './types';
 import { useAuth } from './contexts/AuthContext';
 import { memeService } from './services/memeService';
 
+// Debug log
+console.log('Environment:', import.meta.env.MODE);
+console.log('VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
+
 // Initial Mock Data with User Provided GIFs - Localized
 const INITIAL_MEMES: Meme[] = [
   {
