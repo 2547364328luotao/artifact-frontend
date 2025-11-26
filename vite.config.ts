@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
+    const apiBaseUrl = env.VITE_API_BASE_URL || 'http://localhost:3001';
+    
     return {
       server: {
         port: 3000,
@@ -11,7 +13,7 @@ export default defineConfig(({ mode }) => {
         proxy: {
           // 将 /api 请求代理到后端服务器
           '/api': {
-            target: 'http://localhost:3001',
+            target: apiBaseUrl,
             changeOrigin: true,
             secure: false,
           }
