@@ -1,6 +1,10 @@
 import { Meme, MemeRarity, MemeStats, UserTier, FeedChannel } from '../types';
 
-const API_BASE = '/api/memes';
+// API 基础路径
+// 如果是开发环境，使用相对路径（走 Vite 代理）
+// 如果是生产环境，使用环境变量配置的完整后端地址
+const API_DOMAIN = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || '');
+const API_BASE = `${API_DOMAIN}/api/memes`;
 
 interface UserStats {
   totalMemes: number;

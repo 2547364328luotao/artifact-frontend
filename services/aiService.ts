@@ -17,7 +17,11 @@ export interface AIPlatform {
   models: { id: string; name: string; label: string }[];
 }
 
-const API_BASE = '/api/ai';
+// API 基础路径
+// 如果是开发环境，使用相对路径（走 Vite 代理）
+// 如果是生产环境，使用环境变量配置的完整后端地址
+const API_DOMAIN = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || '');
+const API_BASE = `${API_DOMAIN}/api/ai`;
 
 export const aiService = {
   // 分析图片生成 RPG 鉴定结果
