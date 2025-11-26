@@ -17,7 +17,8 @@ export interface AIPlatform {
   models: { id: string; name: string; label: string }[];
 }
 
-const API_BASE = '/api/ai';
+const API_ROOT = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = `${API_ROOT}/api/ai`;
 
 export const aiService = {
   // 分析图片生成 RPG 鉴定结果

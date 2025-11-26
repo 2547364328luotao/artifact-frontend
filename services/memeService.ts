@@ -1,6 +1,7 @@
 import { Meme, MemeRarity, MemeStats, UserTier, FeedChannel } from '../types';
 
-const API_BASE = '/api/memes';
+const API_ROOT = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = `${API_ROOT}/api/memes`;
 
 interface UserStats {
   totalMemes: number;

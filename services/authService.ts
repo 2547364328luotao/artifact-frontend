@@ -3,7 +3,8 @@ import { User, AuthResponse } from '../types';
 const CURRENT_USER_KEY = 'pixel_drop_current_session';
 
 // API 基础路径
-const API_BASE = '/api/auth';
+const API_ROOT = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = `${API_ROOT}/api/auth`;
 
 export const authService = {
   // 登录
