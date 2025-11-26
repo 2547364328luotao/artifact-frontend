@@ -53,13 +53,17 @@ export const aiService = {
         
         // 如果是旧格式（有 title/description），转换为新格式
         if (analysis.title) {
+          // 优先使用 API 返回的 rank，否则默认为 R
+          const rank = (analysis.rank || 'R') as MemeRarity;
+          const rarityColor = analysis.rarityColor || RARITY_CONFIG[rank]?.color || RARITY_CONFIG['R'].color;
+          
           return {
             status: 'SCAN_COMPLETE',
             item_data: {
               name: analysis.title,
-              rank: 'R' as MemeRarity,
-              rarity_color: RARITY_CONFIG['R'].color,
-              stats: {
+              rank: rank,
+              rarity_color: rarityColor,
+              stats: analysis.stats || {
                 psy_damage: Math.floor(Math.random() * 30) + 40,
                 texture_integrity: Math.floor(Math.random() * 30) + 40,
                 viral_potential: Math.floor(Math.random() * 30) + 40

@@ -22,6 +22,54 @@ const SCAN_PHASES: { phase: ScanPhase; text: string; duration: number }[] = [
   { phase: 'complete', text: 'SCAN COMPLETE', duration: 500 }
 ];
 
+// 鉴定标准指南组件
+const RarityGuide: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="mt-6 border-t-2 border-slate-700 pt-4 w-full">
+      <button 
+        onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }}
+        className="w-full flex items-center justify-between text-slate-400 hover:text-neon-green transition-colors font-mono-retro text-sm group px-2"
+      >
+        <span className="flex items-center gap-2">
+          <span className="text-neon-green border border-neon-green rounded-full w-4 h-4 flex items-center justify-center text-xs">?</span> 
+          LOOT_OS 鉴定标准 v2.2
+        </span>
+        <span className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>▼</span>
+      </button>
+      
+      {isOpen && (
+        <div className="mt-4 space-y-1 animate-[fadeIn_0.3s_ease-out] bg-slate-950/50 p-3 rounded border border-slate-800" onClick={e => e.stopPropagation()}>
+          <div className="grid grid-cols-12 gap-2 text-xs font-mono-retro text-slate-500 border-b border-slate-700 pb-2 mb-2 px-1">
+            <div className="col-span-2">等级</div>
+            <div className="col-span-3">概率</div>
+            <div className="col-span-7">说明 (阈值)</div>
+          </div>
+          
+          {[
+            { rank: 'UR', color: '#FFD700', prob: '~4%', desc: '传说级经典 (≥82)' },
+            { rank: 'SSR', color: '#BD00FF', prob: '~18%', desc: '神图/很搞笑 (68-82)' },
+            { rank: 'SR', color: '#00FFFF', prob: '~38%', desc: '优质好图 (50-68)' },
+            { rank: 'R', color: '#00FF00', prob: '~28%', desc: '普通可用 (30-50)' },
+            { rank: 'N', color: '#A0A0A0', prob: '~12%', desc: '需改进 (<30)' },
+          ].map((item) => (
+            <div key={item.rank} className="grid grid-cols-12 gap-2 text-xs items-center hover:bg-slate-800/50 p-1 rounded transition-colors">
+              <div className="col-span-2 font-bold" style={{ color: item.color }}>{item.rank}</div>
+              <div className="col-span-3 text-slate-400">{item.prob}</div>
+              <div className="col-span-7 text-slate-300">{item.desc}</div>
+            </div>
+          ))}
+          
+          <div className="mt-3 text-[10px] text-slate-500 italic border-t border-slate-800 pt-2 px-1">
+            * 评分基于 AI 视觉分析与模因潜力评估算法
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // 扫描动画组件
 const ScanAnimation: React.FC<{ phase: ScanPhase; result: AiAnalysisResult | null }> = ({ phase, result }) => {
   const phaseIndex = SCAN_PHASES.findIndex(p => p.phase === phase);
@@ -261,6 +309,13 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onUpload }) => {
       if (analysis && analysis.item_data) {
         setAnalysisResult(analysis);
         
+        // Debug: 打印 AI 分析结果
+        console.log('🎯 [DEBUG] AI 分析结果:', {
+          rank: analysis.item_data.rank,
+          rarity_color: analysis.item_data.rarity_color,
+          name: analysis.item_data.name
+        });
+        
         // 显示结果一会儿
         await new Promise(resolve => setTimeout(resolve, 1500));
         
@@ -300,10 +355,19 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onUpload }) => {
             base64Preview: uploadResult.base64Preview,  // 低清预览
             base64Backup: uploadResult.base64Backup,
             storageType: uploadResult.storageType,
+            // RPG 属性 - 必须使用 AI 返回的值！
             rank: itemData.rank,
             rarity_color: itemData.rarity_color,
             stats: itemData.stats
           };
+          
+          // Debug: 确认传递给后端的数据
+          console.log('📤 [DEBUG] 准备上传到后端:', {
+            rank: uploadData.rank,
+            rarity_color: uploadData.rarity_color,
+            title: uploadData.title
+          });
+          
           const result = await memeService.upload(uploadData);
           if (result.success && result.meme) {
             onUpload(result.meme!);
@@ -371,24 +435,28 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onUpload }) => {
 
         <div className="p-4 md:p-6 flex-1 flex flex-col overflow-y-auto">
           {!preview ? (
-            <div 
-              className="border-2 border-dashed border-slate-600 bg-slate-950/50 flex-1 min-h-[300px] flex flex-col items-center justify-center cursor-pointer hover:border-neon-pink hover:bg-slate-900 transition-all group relative overflow-hidden"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleFileChange} 
-                accept="image/*" 
-                className="hidden" 
-              />
-              <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
-              <div className="text-5xl md:text-6xl mb-6 group-hover:-translate-y-2 transition-transform duration-300">📦</div>
-              <p className="font-sans font-bold tracking-wide text-sm md:text-base text-slate-400 group-hover:text-white transition-colors text-center px-4 leading-relaxed">
-                {isMobile ? '点击上传数字造物' : '拖拽数字造物到此处'}
-              </p>
-              <p className="font-mono-retro text-sm text-slate-600 mt-3">[ JPG / PNG / GIF ]</p>
-              <p className="font-mono-retro text-xs text-neon-green/50 mt-2">LOOT_OS 将自动分析并鉴定其稀有度</p>
+            <div className="flex flex-col h-full">
+              <div 
+                className="border-2 border-dashed border-slate-600 bg-slate-950/50 flex-1 min-h-[200px] flex flex-col items-center justify-center cursor-pointer hover:border-neon-pink hover:bg-slate-900 transition-all group relative overflow-hidden p-6"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  onChange={handleFileChange} 
+                  accept="image/*" 
+                  className="hidden" 
+                />
+                <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
+                <div className="text-5xl md:text-6xl mb-6 group-hover:-translate-y-2 transition-transform duration-300">📦</div>
+                <p className="font-sans font-bold tracking-wide text-sm md:text-base text-slate-400 group-hover:text-white transition-colors text-center px-4 leading-relaxed">
+                  {isMobile ? '点击上传数字造物' : '拖拽数字造物到此处'}
+                </p>
+                <p className="font-mono-retro text-sm text-slate-600 mt-3">[ JPG / PNG / GIF ]</p>
+                <p className="font-mono-retro text-xs text-neon-green/50 mt-2">LOOT_OS 将自动分析并鉴定其稀有度</p>
+              </div>
+              
+              <RarityGuide />
             </div>
           ) : (
             <div className="flex-1 flex flex-col relative">
@@ -399,12 +467,12 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onUpload }) => {
               )}
               
               {/* Preview Canvas */}
-              <div className="relative border-2 border-slate-700 bg-black p-0 flex-1 flex items-center justify-center min-h-[300px] overflow-hidden mb-6">
+              <div className="relative border-2 border-slate-700 bg-black p-0 w-full flex-1 flex items-center justify-center min-h-[300px] max-h-[50vh] md:max-h-[500px] overflow-hidden mb-6 rounded-sm">
                  
                  <div className={`transition-all duration-300 relative
                     ${cropMode === 'original' ? 'w-full h-full' : ''}
-                    ${cropMode === 'square' ? 'aspect-square w-auto h-full max-w-full' : ''}
-                    ${cropMode === 'wide' ? 'aspect-video w-full h-auto' : ''}
+                    ${cropMode === 'square' ? 'aspect-square h-full max-w-full' : ''}
+                    ${cropMode === 'wide' ? 'aspect-video w-full max-h-full' : ''}
                  `}>
                     <img 
                       src={preview} 

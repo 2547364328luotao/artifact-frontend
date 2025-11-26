@@ -1,4 +1,4 @@
-import { Meme, MemeRarity, UserTier, FeedChannel } from '../types';
+import { Meme, MemeRarity, MemeStats, UserTier, FeedChannel } from '../types';
 
 const API_BASE = '/api/memes';
 
@@ -57,11 +57,26 @@ export const memeService = {
     url: string;
     title: string;
     description: string;
+    flavor_text?: string;
     tags: string[];
     type: string;
     isPublic?: boolean;
+    base64Preview?: string;
+    base64Backup?: string;
+    storageType?: string;
+    // RPG 属性 - 必须使用 AI 分析返回的值
+    rank: MemeRarity;
+    rarity_color: string;
+    stats?: MemeStats;
   }): Promise<{ success: boolean; meme?: Meme; error?: string; hashReward?: number }> => {
     try {
+      // Debug: 打印上传数据，确认 rank 值
+      console.log('📤 [DEBUG] memeService.upload 发送数据:', {
+        rank: meme.rank,
+        rarity_color: meme.rarity_color,
+        title: meme.title
+      });
+      
       const response = await fetch(API_BASE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
