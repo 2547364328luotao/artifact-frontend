@@ -167,6 +167,25 @@ const App: React.FC = () => {
 
             {/* Actions */}
             <div className="flex items-center gap-3">
+              {/* Mobile User/Login - Visible only on mobile */}
+              <div className="md:hidden mr-1">
+                {user ? (
+                  <button 
+                    onClick={() => setIsProfileOpen(true)}
+                    className="w-8 h-8 rounded bg-slate-700 border border-slate-500 active:scale-95 transition-transform"
+                    style={{ backgroundColor: user.avatarColor || '#334155' }}
+                    aria-label="User Profile"
+                  />
+                ) : (
+                  <button 
+                    onClick={() => setIsAuthOpen(true)}
+                    className="font-pixel text-[10px] text-slate-400 hover:text-neon-green border border-slate-600 px-2 py-1 rounded bg-slate-900/50"
+                  >
+                    LOGIN
+                  </button>
+                )}
+              </div>
+
               {user ? (
                  <div className="hidden md:flex items-center gap-3 border-r-2 border-slate-700 pr-3 mr-1">
                     <button 
@@ -233,10 +252,13 @@ const App: React.FC = () => {
             
             {/* Mobile User Status */}
             {user && (
-                <div className="md:hidden flex items-center gap-2">
+                <button 
+                     onClick={() => setIsProfileOpen(true)}
+                     className="md:hidden flex items-center gap-2 active:opacity-70 transition-opacity"
+                >
                      <div className="w-6 h-6 rounded border border-slate-500" style={{ backgroundColor: user.avatarColor }}></div>
                      <span className="font-sans font-bold text-xs text-neon-blue">{user.username}</span>
-                </div>
+                </button>
             )}
         </div>
 
